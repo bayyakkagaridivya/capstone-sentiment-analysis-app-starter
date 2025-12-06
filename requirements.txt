@@ -4,3 +4,5 @@ vaderSentiment==3.3.2
 keras==3.11.3
 numpy==2.3.3
 gunicorn==23.0.0
+pytest==7.4.0
+honcho==1.0.1

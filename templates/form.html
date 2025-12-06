@@ -4,9 +4,55 @@
         <title>Sentiment Analysis</title>
     </head>
     <body>
+        {% if error %}
+            <p style="color: red; font-weight: bold;">{{ error }}</p>
+        {% endif %}
         <form method="POST">
-            <textarea name="user_text" rows="5"></textarea>
-            <input type="submit" value="Analyze Text">
+            <label>
+                <input type="radio" name="model_selector" value="vader" checked> VADER
+            </label>
+            <label>
+                <input type="radio" name="model_selector" value="keras"> Custom Keras
+            </label>
+            <br>
+            <textarea name="user_text"></textarea>
+            <button type="submit">Analyze Sentiment</button>
         </form>
+        {% if sentiment %}
+            <h3>Analysis with {{ model_used }}:</h3>
+
+            {% if sentiment['overall'] == 'Positive' %}
+                <p class="sentiment-icon">Overall Sentiment: 🥳 Positive</p>
+            {% elif sentiment['overall'] == 'Negative' %}
+                <p class="sentiment-icon">Overall Sentiment: 😔 Negative</p>
+            {% elif sentiment['overall'] == 'Neutral' %}
+                <p class="sentiment-icon">Overall Sentiment: 😐 Neutral</p>
+            {% endif %}
+            <hr> 
+             
+            {% if model_used == "VADER" %}
+                 <ul>
+                     <li>**Positive:** {{ sentiment['pos'] * 100 }}%</li>
+                     <li>**Negative:** {{ sentiment['neg'] * 100 }}%</li>
+                     <li>**Neutral:** {{ sentiment['neu'] * 100 }}%</li>
+                     <li>**Compound Score:** {{ sentiment['compound'] * 100 }}%</li>
+                 </ul>
+             
+            {% elif model_used == "Custom Keras Model" %}
+                 <ul>
+                     <li>**Predicted Sentiment:** {{ sentiment['result'] }}</li>
+                     <li>**Positive Probability:** {{ sentiment['positive'] * 100 | round(2) }}%</li>
+                     <li>**Negative Probability:** {{ sentiment['negative'] * 100 | round(2) }}%</li>
+                 </ul>
+                 
+            {% endif %}
+        {% endif %}
+        <hr>
+            <footer>
+                <p style="text-align: center; font-size: 0.8em; color: #777;">
+                    Sentiment Analyzer App | Version {{ app_version }} | &copy; 2025
+                </p>
+            </footer>
+
     </body>
 </html>
